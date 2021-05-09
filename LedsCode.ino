@@ -73,8 +73,7 @@ void setup()
     readIndex = 0; }
    average = total / numReadings;
   }
-  //leds inferiores [0-9]
-
+  //elegir paleta de colores para el "modo estático"
     currentPalette = RainbowColors_p;
     currentBlending = LINEARBLEND;
     FastLED.show();
