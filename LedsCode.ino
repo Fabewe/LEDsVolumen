@@ -1,3 +1,4 @@
+#define FASTLED_INTERNAL 3
 #include <FastLED.h>
 
 
@@ -18,6 +19,7 @@ int readd;
 #define BRIGHTNESS  45 // BRILLO
 #define LED_TYPE    WS2811 //CONTROLADOR DE LA TIRA
 #define COLOR_ORDER GRB
+#define nOpciones 3
 #define inicio 10
 
 
@@ -26,7 +28,7 @@ extern const TProgmemPalette16 myRedWhiteBluePalette_p PROGMEM;
 CRGB leds[NUM_LEDS];
 
 //Elegir los colores (CRGB)
-CRGB color=CRGB::Green;
+CRGB color=CRGB::MediumOrchid;
 CRGB colortop=CRGB::HotPink;
 
                               
@@ -74,8 +76,7 @@ void setup()
    average = total / numReadings;
   }
   //elegir paleta de colores para el "modo estático"
-    currentPalette = RainbowColors_p;
-    currentBlending = LINEARBLEND;
+
     FastLED.show();
 
 }
@@ -94,7 +95,7 @@ void loop(){
   if (digitalRead(buttonPin)==LOW){
     opc++;
     delay(250);
-    if (opc>1) opc=0; 
+    if (opc> nOpciones - 1) opc=0; 
     }
   //Serial.println(opc);
     if (opc==0){
@@ -166,19 +167,58 @@ void loop(){
       difa=dif;
   }else{
     //Esta es la parte del código para que sea de un color estático o en este caso usando una paleta de colores que trae la librería 
-        static uint8_t startIndex = 0;
+    static uint8_t startIndex = 0;
     startIndex = startIndex + 1; /* motion speed */
     
-    FillLEDsFromPaletteColors( startIndex);
+    FillLEDsFromPaletteColors( startIndex,opc);
     
     FastLED.show();
     FastLED.delay(1000 / 100);
     if (!cambiar) cambiar=true;
     }
     }
-void FillLEDsFromPaletteColors( uint8_t colorIndex)
+
+
+void FillLEDsFromPaletteColors( uint8_t colorIndex,int opc)
 {
     uint8_t brightness = 255;
+
+    if(opc==1){
+      currentPalette = RainbowColors_p;
+      currentBlending = LINEARBLEND;
+      //Serial.println(currentBlending);
+    }
+    if(opc==2){
+    currentPalette = CRGBPalette16(
+                                   CRGB::DarkMagenta, CRGB::DarkMagenta,  CRGB::DarkViolet,  CRGB::DarkMagenta,
+                                   CRGB::DarkMagenta, CRGB::DarkViolet, CRGB::DarkViolet,  CRGB::DarkMagenta,
+                                   CRGB::DarkMagenta,  CRGB::DarkViolet,  CRGB::DarkMagenta,  CRGB::DarkMagenta,
+                                   CRGB::DarkViolet, CRGB::DarkViolet, CRGB::DarkMagenta,  CRGB::DarkMagenta );
+    currentBlending = LINEARBLEND;
+    //Serial.println(currentBlending);
+    }
+
+    
+    /*
+     HACER TU PROPIA OPCIÓN:
+     -Cambiar el #define al numero de opciones al correcto
+     
+     -Rellenar la siguiente plantilla:
+        if(opc==<Número de la opción>){
+           currentPalette = CRGBPalette16(
+                                     <Color 1>, <Color 2>,  <Color 3>,  <Color 4>,
+                                     <Color 5>, <Color 6>,  <Color 7>,  <Color 8>,
+                                     <Color 9>, <Color 10>, <Color 11>, <Color 12>,
+                                     <Color 13>,<Color 14>, <Color 15>,  <Color 16> 
+                                     );
+      currentBlending = <LINEARBLEND/NOBLEND>;
+      }
+      
+    
+    
+    */
+
+    
     
     for( int i = 0; i < NUM_LEDS; i++) {
         leds[i] = ColorFromPalette( currentPalette, colorIndex, brightness, currentBlending);
