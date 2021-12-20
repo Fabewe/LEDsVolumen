@@ -201,7 +201,7 @@ void FillLEDsFromPaletteColors( uint8_t colorIndex,int opc)
     
     /*
      HACER TU PROPIA OPCIÓN:
-     -Cambiar el #define al numero de opciones al correcto
+     -Cambiar el #define nOpciones al numero de opciones correcto
      
      -Rellenar la siguiente plantilla:
         if(opc==<Número de la opción>){
